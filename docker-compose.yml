@@ -1,0 +1,9 @@
+services:
+  web:
+    build: .
+    container_name: europe2026
+    # Publishes on 0.0.0.0:2026 of the host -> port 80 in the container.
+    # NGINX Proxy Manager (other host) forwards the domain to 192.168.150.50:2026.
+    ports:
+      - "2026:80"
+    restart: unless-stoppe

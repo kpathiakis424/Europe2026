@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>We're All Going to Europe with Kevin — Lucerne Hotels</title>
+<meta name="description" content="Shortlist of lake-view hotels in the Lucerne area for 27-29 Aug 2026, 2 rooms." />
+<style>
+  :root{
+    --bg:#0c1322; --panel:#121d33; --panel2:#172642; --ink:#eaf1ff; --muted:#9fb2d4;
+    --line:#243a63; --accent:#4ea1ff; --accent2:#37d6a7; --gold:#ffce5c;
+    --warn:#ff8a6b; --chip:#1d2f52; --shadow:0 10px 30px rgba(0,0,0,.35);
+    --radius:16px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:linear-gradient(180deg,#0a1120,#0c1322 240px,#0c1322);
+    color:var(--ink); line-height:1.5; -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--accent);text-decoration:none}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 18px}
+
+  header.hero{
+    padding:30px 0 18px; border-bottom:1px solid var(--line);
+    background:
+      radial-gradient(1200px 220px at 80% -40%, rgba(78,161,255,.18), transparent 60%),
+      radial-gradient(900px 200px at 10% -30%, rgba(55,214,167,.14), transparent 60%);
+  }
+  .hero h1{margin:0 0 6px;font-size:26px;letter-spacing:.2px}
+  .hero h1 span{color:var(--accent2)}
+  .hero p.sub{margin:0;color:var(--muted);font-size:15px}
+  .tripbar{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+  .pill{
+    background:var(--panel2);border:1px solid var(--line);border-radius:999px;
+    padding:7px 13px;font-size:13px;color:var(--ink);display:flex;align-items:center;gap:7px
+  }
+  .pill b{color:var(--gold);font-weight:600}
+
+  .controls{
+    position:sticky;top:0;z-index:30;background:rgba(10,17,32,.86);backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);padding:12px 0;margin-bottom:22px
+  }
+  .controls .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+  .seg{display:flex;gap:6px;flex-wrap:wrap}
+  .chip{
+    cursor:pointer;user-select:none;background:var(--chip);border:1px solid var(--line);
+    color:var(--muted);padding:7px 12px;border-radius:999px;font-size:13px;transition:.15s;white-space:nowrap
+  }
+  .chip:hover{border-color:var(--accent)}
+  .chip.active{background:var(--accent);color:#02122b;border-color:var(--accent);font-weight:600}
+  .chip.tgl.active{background:var(--accent2);color:#03261c;border-color:var(--accent2)}
+  #favChip.active{background:#ff4f76 !important;color:#fff !important;border-color:#ff4f76 !important}
+  .spacer{flex:1 1 auto}
+  select.sort{
+    background:var(--chip);color:var(--ink);border:1px solid var(--line);border-radius:10px;
+    padding:8px 10px;font-size:13px
+  }
+  .count{color:var(--muted);font-size:13px;padding:2px 4px}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:18px;padding-bottom:30px}
+  .card{
+    background:linear-gradient(180deg,var(--panel),#101a2e);border:1px solid var(--line);
+    border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column;
+    transition:transform .15s,border-color .15s
+  }
+  .card:hover{transform:translateY(-3px);border-color:#33507f}
+  .imgwrap{position:relative;aspect-ratio:16/10;background:linear-gradient(135deg,#16304f,#0e2038);overflow:hidden}
+  .imgwrap img.main{width:100%;height:100%;object-fit:cover;display:block}
+  .badges{position:absolute;left:10px;top:10px;display:flex;flex-wrap:wrap;gap:6px;max-width:88%}
+  .badge{font-size:11px;font-weight:600;padding:4px 8px;border-radius:7px;backdrop-filter:blur(4px);
+    background:rgba(6,14,28,.66);border:1px solid rgba(255,255,255,.14);color:#dce8ff}
+  .badge.view{color:#bfe3ff}
+  .badge.balcony{color:#c8ffe9}
+  .areaTag{position:absolute;right:10px;top:10px;font-size:11px;font-weight:700;letter-spacing:.4px;
+    text-transform:uppercase;padding:4px 9px;border-radius:7px;background:rgba(6,14,28,.7);
+    border:1px solid rgba(255,255,255,.16);color:#fff}
+  .favbtn{position:absolute;right:10px;bottom:10px;width:38px;height:38px;border-radius:50%;
+    border:1px solid rgba(255,255,255,.3);background:rgba(6,14,28,.62);backdrop-filter:blur(4px);
+    color:#ffd0d8;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;
+    transition:.15s;line-height:1}
+  .favbtn:hover{transform:scale(1.1);border-color:#ff6b8a}
+  .favbtn.on{background:#ff4f76;border-color:#ff4f76;color:#fff;box-shadow:0 4px 14px rgba(255,79,118,.45)}
+  .card.fav{border-color:#ff6b8a}
+  .thumbs{display:flex;gap:5px;position:absolute;left:10px;bottom:10px}
+  .thumbs button{width:34px;height:26px;border-radius:5px;border:1px solid rgba(255,255,255,.5);
+    overflow:hidden;padding:0;cursor:pointer;opacity:.8;background:#000}
+  .thumbs button.active{outline:2px solid var(--accent);opacity:1}
+  .thumbs img{width:100%;height:100%;object-fit:cover}
+
+  .body{padding:14px 15px 16px;display:flex;flex-direction:column;gap:10px;flex:1}
+  .titlerow{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+  .titlerow h3{margin:0;font-size:17px;line-height:1.25}
+  .stars{color:var(--gold);font-size:12px;white-space:nowrap;margin-top:3px}
+  .ratingbox{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);text-align:center}
+  .score{background:var(--accent);color:#02122b;font-weight:700;border-radius:8px;padding:3px 8px;font-size:13px}
+  .score.mid{background:#5b78a8;color:#fff}
+  .desc{font-size:13.5px;color:#cdd9f1}
+  .facil{display:flex;flex-wrap:wrap;gap:6px}
+  .facil span{font-size:11.5px;color:var(--muted);background:var(--panel2);border:1px solid var(--line);
+    padding:3px 8px;border-radius:6px}
+  .transport{font-size:12.5px;color:#a9c4e6;background:rgba(78,161,255,.08);border:1px solid #1f3a63;
+    border-radius:9px;padding:8px 10px;display:flex;gap:7px}
+  .transport b{color:#cfe4ff;font-weight:600}
+  .priceblock{margin-top:auto;display:flex;justify-content:space-between;align-items:flex-end;gap:10px;
+    padding-top:8px;border-top:1px dashed #23375d}
+  .price .pn{font-size:21px;font-weight:700;color:#fff}
+  .price .unit{font-size:12px;color:var(--muted)}
+  .price .tot{font-size:12px;color:var(--muted);margin-top:2px}
+  .budgetTag{font-size:11px;font-weight:700;padding:3px 8px;border-radius:6px}
+  .b-under{background:rgba(55,214,167,.16);color:#6ff0c4;border:1px solid #1f6b53}
+  .b-in{background:rgba(255,206,92,.16);color:#ffdc8a;border:1px solid #7a6326}
+  .b-over{background:rgba(255,138,107,.16);color:#ffb39c;border:1px solid #7a3a2a}
+  .cta{display:flex;gap:8px;margin-top:4px}
+  .btn{flex:1;text-align:center;padding:10px;border-radius:10px;font-size:13.5px;font-weight:600;cursor:pointer;border:1px solid}
+  .btn.book{background:var(--accent);color:#02122b;border-color:var(--accent)}
+  .btn.book:hover{filter:brightness(1.07)}
+  .btn.map{background:transparent;color:var(--ink);border-color:var(--line);flex:0 0 66px}
+  .btn.map:hover{border-color:var(--accent)}
+
+  .section{margin:10px 0 40px}
+  .section h2{font-size:19px;margin:0 0 12px}
+  .panelbox{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 20px}
+  .tgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+  .tgrid h4{margin:0 0 6px;font-size:14px;color:var(--accent2)}
+  .tgrid p{margin:0;font-size:13.5px;color:#cdd9f1}
+  .legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12.5px;color:var(--muted);margin-top:14px;
+    border-top:1px solid var(--line);padding-top:12px}
+  .legend b{color:var(--ink)}
+  footer{border-top:1px solid var(--line);padding:22px 0 50px;color:var(--muted);font-size:12.5px}
+  .empty{grid-column:1/-1;text-align:center;color:var(--muted);padding:40px}
+  @media(max-width:560px){.hero h1{font-size:22px}.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <h1>We're All Going to Europe with <span>Kevin</span></h1>
+    <p class="sub">Lake-view hotel shortlist for the Lucerne leg &mdash; two rooms, one for us &amp; one for them.</p>
+    <div class="tripbar">
+      <div class="pill">Dates <b>27-29 Aug 2026</b> &middot; 2 nights</div>
+      <div class="pill"><b>2 rooms</b> &middot; 4 adults</div>
+      <div class="pill">Target <b>$400-600</b> / room&middot;night</div>
+      <div class="pill">Room with a view + balcony</div>
+      <div class="pill">Zurich &rarr; Lucerne &asymp; 1h</div>
+    </div>
+  </div>
+</header>
+
+<div class="controls">
+  <div class="wrap">
+    <div class="row" style="margin-bottom:8px">
+      <div class="seg" id="areaSeg">
+        <div class="chip active" data-area="all">All areas</div>
+        <div class="chip" data-area="Weggis">Weggis</div>
+        <div class="chip" data-area="Vitznau">Vitznau</div>
+        <div class="chip" data-area="Lucerne">Lucerne city</div>
+        <div class="chip" data-area="B&uuml;rgenstock">B&uuml;rgenstock</div>
+      </div>
+      <div class="spacer"></div>
+      <select class="sort" id="sort">
+        <option value="fav">Sort: Favorites first</option>
+        <option value="price" selected>Sort: Price (low &rarr; high)</option>
+        <option value="priceHigh">Sort: Price (high &rarr; low)</option>
+        <option value="rating">Sort: Guest rating</option>
+        <option value="stars">Sort: Stars</option>
+      </select>
+    </div>
+    <div class="row">
+      <div class="seg" id="budgetSeg">
+        <div class="chip active" data-budget="all">Any price</div>
+        <div class="chip" data-budget="under">Under budget</div>
+        <div class="chip" data-budget="in">In $400-600</div>
+        <div class="chip" data-budget="over">Splurge</div>
+      </div>
+      <div class="seg" style="margin-left:6px">
+        <div class="chip tgl" data-toggle="balcony">Balcony</div>
+        <div class="chip tgl" data-toggle="lakeview">Lake view</div>
+        <div class="chip tgl" id="favChip" data-toggle="favOnly" style="border-color:#ff6b8a;color:#ffb3c4">&#9829; Favorites</div>
+      </div>
+      <div class="spacer"></div>
+      <div class="count" id="count"></div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="grid" id="grid"></div>
+</div>
+
+<div class="wrap">
+  <div class="section">
+    <h2>Getting around (car vs. trains)</h2>
+    <div class="panelbox">
+      <div class="tgrid">
+        <div>
+          <h4>Land in Zurich &rarr; Lucerne</h4>
+          <p>Direct trains every ~30 min, about 1 hour, no change. If renting a car, pick it up at Zurich Airport; it's ~50 min to Lucerne (A14/A4).</p>
+        </div>
+        <div>
+          <h4>Lucerne &harr; Weggis / Vitznau</h4>
+          <p>The lakeside resorts have no train station. Reach them by the scenic boat across Lake Lucerne (~40-60 min, gorgeous), bus 6/7, or car (~30-40 min). Most lakeside hotels here have free parking.</p>
+        </div>
+        <div>
+          <h4>Day trip to Grindelwald</h4>
+          <p>By car ~1h30 each way; by train via Interlaken Ost ~2h10 each way (the scenic Lucerne-Interlaken Express). Doable as a full day &mdash; a car makes it far easier from Weggis/Vitznau.</p>
+        </div>
+        <div>
+          <h4>Onward to Chur (Bernina Express)</h4>
+          <p>Lucerne &rarr; Chur &asymp; 2h by train (via Arth-Goldau / Zurich). From Weggis or Vitznau, take the boat or bus to Lucerne or Arth-Goldau first, then on to Chur.</p>
+        </div>
+        <div>
+          <h4>Tickets &amp; passes</h4>
+          <p>A <b>Tell-Pass</b> covers boats, buses, trains and most mountain railways (Rigi, Pilatus) in the Lucerne region &mdash; worth it if you're not driving. Use the SBB app for point-to-point train tickets.</p>
+        </div>
+        <div>
+          <h4>Car notes</h4>
+          <p>Switzerland requires a motorway <b>vignette</b> (usually included on rentals). Lakeside villages are small; hotels with garages / free parking are flagged on each card.</p>
+        </div>
+      </div>
+      <div class="legend">
+        <span><b>Budget legend:</b></span>
+        <span>Under = below $400 / room&middot;night</span>
+        <span>In = $400-600 / room&middot;night</span>
+        <span>Splurge = above $600 / room&middot;night</span>
+        <span style="margin-left:auto">Prices live-checked for 2 rooms &middot; 2 nights, shown per room/night (USD).</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap">
+    Prices &amp; availability were pulled live from Booking.com for <b>27-29 Aug 2026</b>, 2 rooms / 4 adults, then converted to per-room-per-night USD. They change fast, so book the favorites quickly &mdash; every "Check availability" button opens that hotel on Booking with your dates pre-filled. Photos link to each hotel's official site.
+  </div>
+</footer>
+
+<script>
+const HOTELS = [
+  {
+    name:"Hotel Alexander", area:"Weggis", stars:4, score:8.3, reviews:138,
+    perNight:296, total:1185, budget:"under", lakeview:true, balcony:true,
+    img:"https://static.wixstatic.com/media/fefe86_41ffef8861e4456a8082c0635ce5d974~mv2.jpg",
+    thumbs:[
+      "https://static.wixstatic.com/media/fefe86_41ffef8861e4456a8082c0635ce5d974~mv2.jpg",
+      "https://static.wixstatic.com/media/fefe86_11786e81819c4b54b23fce3772a91bf3~mv2.jpg",
+      "https://static.wixstatic.com/media/fefe86_e910a852930c4295baadd2d5bdcdce51~mv2.jpg"
+    ],
+    desc:"Modern family-run 4-star directly on the lake. Balcony rooms over the water, heated infinity pool, big spa and a private bathing area.",
+    facil:["Lakefront","Balcony rooms","Infinity pool","Spa","Private beach","Free WiFi"],
+    transport:"Boat to Lucerne ~45 min &middot; Bus 6/7 &middot; car ~35 min &middot; paid parking nearby",
+    book:"https://www.booking.com/hotel/ch/alexanderweggis.html?aid=8132308&checkin=2026-08-27&checkout=2026-08-29&no_rooms=2&group_adults=4&selected_currency=USD",
+    lat:47.029404, lng:8.419577
+  },
+  {
+    name:"See & Wellnesshotel Gerbi", area:"Weggis", stars:4, score:8.4, reviews:455,
+    perNight:328, total:1312, budget:"under", lakeview:true, balcony:true,
+    img:"https://static.wixstatic.com/media/fefe86_11786e81819c4b54b23fce3772a91bf3~mv2.jpg",
+    thumbs:["https://static.wixstatic.com/media/fefe86_11786e81819c4b54b23fce3772a91bf3~mv2.jpg"],
+    desc:"Beachfront 4-star sister hotel of the Alexander, sharing the 1,500 m2 Vitalis spa with indoor & outdoor pools. Lake-facing balcony rooms.",
+    facil:["Beachfront","Balcony rooms","Indoor+outdoor pool","Big spa","Free parking","Free WiFi"],
+    transport:"Boat to Lucerne ~45 min &middot; Bus 6/7 &middot; car ~35 min &middot; free parking",
+    book:"https://www.booking.com/hotel/ch/gerbiweggis.html?aid=8132308&checkin=2026-08-27&checkout=2026-08-29&no_rooms=2&group_adults=4&selected_currency=USD",
+    lat:47.029115, lng:8.419084
+  },
+  {
+    name:"Hotel Central am See", area:"Weggis", stars:3, score:8.7, reviews:296,
+    perNight:381, total:1524, budget:"under", lakeview:true, balcony:true,
+    img:"https://img.destination.one/remote/.webp?url=https%3A%2F%2Fdam.destination.one%2F3698138%2F3311a54525908fa1fa03bea3defd6842f52d6d94dbf5bb10dbb5a6ed3ccbbf47%2F1000.jpg&scale=both&mode=crop&quality=90&width=1600",
+    thumbs:[
+      "https://img.destination.one/remote/.webp?url=https%3A%2F%2Fdam.destination.one%2F3698138%2F3311a54525908fa1fa03bea3defd6842f52d6d94dbf5bb10dbb5a6ed3ccbbf47%2F1000.jpg&scale=both&mode=crop&quality=90&width=1600",
+      "https://img.destination.one/remote/.webp?url=https%3A%2F%2Fdam.destination.one%2F3210573%2F7eac6a572c6e889e704453df0e8c44f909c11ec44eb22840f7624223905d1dcf%2F1202.jpg&scale=both&mode=crop&quality=90&width=1600",
+      "https://img.destination.one/remote/.webp?url=https%3A%2F%2Fdam.destination.one%2F3698137%2Fef097260eef82e8971553539e75f88b279fbb3691744f1f07dd5a4dbdc883a2e%2F1014.jpg&scale=both&mode=crop&quality=90&width=1600"
+    ],
+    desc:"Historic hotel right on the shore. All 32 rooms have lake & mountain views; heated outdoor pool with direct lake access and a lovely lakeside terrace.",
+    facil:["On the lake","Lake-view rooms","Outdoor pool","Lake terrace","Restaurant","Free WiFi"],
+    transport:"Boat dock steps away &middot; Bus 6/7 &middot; car ~35 min &middot; parking at hotel (fee)",
+    book:"https://www.booking.com/hotel/ch/central-am-see.html?aid=8132308&checkin=2026-08-27&checkout=2026-08-29&no_rooms=2&group_adults=4&selected_currency=USD",
+    lat:47.03145, lng:8.429995
+  },
+  {
+    name:"Seehof Hotel du Lac", area:"Weggis", stars:3, score:8.2, reviews:972,
+    perNight:307, total:1230, budget:"under", lakeview:true, balcony:true,
+    img:"https://img.destination.one/remote/.webp?url=https%3A%2F%2Fdam.destination.one%2F2864995%2F7a567b886fd9df3ae57e664876493983adca8eab19d244aba50006320dc2de82%2F4000.jpg&scale=both&mode=crop&quality=90&width=1600",
+    thumbs:[
+      "https://img.destination.one/remote/.webp?url=https%3A%2F%2Fdam.destination.one%2F2864995%2F7a567b886fd9df3ae57e664876493983adca8eab19d244aba50006320dc2de82%2F4000.jpg&scale=both&mode=crop&quality=90&width=1600",
+      "https://img.destination.one/remote/.webp?url=https%3A%2F%2Fdam.destination.one%2F2865006%2F6404b85dd94a47a784eb884f0288167d78718782f35db4a94e87f82738475b87%2Fseelounge.jpg&scale=both&mode=crop&quality=90&width=1600",
+      "https://img.destination.one/remote/.webp?url=https%3A%2F%2Fdam.destination.one%2F2864997%2F7d6ba8b0e556b43871024786be3254c8146a615e5261a18ee6487b7b7ed79ecd%2F4002.jpg&scale=both&mode=crop&quality=90&width=1600"
+    ],
+    desc:"One of Weggis' loveliest spots &mdash; a historic house (1838) directly on the lake with its own bathing area, 4 min from the boat dock. Named a top-50 Swiss 3-star.",
+    facil:["Direct lake access","Lake-view rooms","Private beach","Lake lounge","Free WiFi","Parking"],
+    transport:"4 min walk to boat dock &middot; Bus 6/7 &middot; car ~35 min",
+    book:"https://www.booking.com/hotel/ch/seehof-du-lac.html?aid=8132308&checkin=2026-08-27&checkout=2026-08-29&no_rooms=2&group_adults=4&selected_currency=USD",
+    lat:47.032267, lng:8.435912
+  },
+  {
+    name:"Hotel Friedheim", area:"Weggis", stars:3, score:8.9, reviews:340,
+    perNight:297, total:1188, budget:"under", lakeview:true, balcony:true,
+    img:"https://www.hotel-friedheim.ch/fileadmin/_processed_/3/9/csm_Beide_18a788214b.jpg",
+    thumbs:["https://www.hotel-friedheim.ch/fileadmin/_processed_/3/9/csm_Beide_18a788214b.jpg"],
+    desc:"Quiet hillside hotel just above Weggis with an outstanding 8.9 rating. Standard rooms with balcony and a panoramic lake-and-mountain terrace for dining.",
+    facil:["Lake & mountain views","Balcony rooms","Terrace restaurant","Garden","Free parking","Free WiFi"],
+    transport:"~10 min walk down to lake/boats &middot; Bus 6/7 &middot; car ~35 min &middot; free parking",
+    book:"https://www.booking.com/hotel/ch/friedheim-weggis.html?aid=8132308&checkin=2026-08-27&checkout=2026-08-29&no_rooms=2&group_adults=4&selected_currency=USD",
+    lat:47.03238, lng:8.420502
+  },
+  {
+    name:"Hotel R&ouml;ssli Gourmet & Spa", area:"Weggis", stars:4, score:8.5, reviews:271,
+    perNight:525, total:2100, budget:"in", lakeview:true, balcony:true,
+    img:"https://cdn.prod.website-files.com/64784e6f1b84ccb7543df448/65e197c69d156cc6ba2a8408_64bf9d122cb97e10ce8ef2f3_Steg-1536x1137%20(1).webp",
+    thumbs:["https://cdn.prod.website-files.com/64784e6f1b84ccb7543df448/65e197c69d156cc6ba2a8408_64bf9d122cb97e10ce8ef2f3_Steg-1536x1137%20(1).webp"],
+    desc:"Refined lakeside 4-star where every room has a balcony. 900 m2 spa, Gault-Millau gourmet restaurant 'Equo 1706', free minibar and regional breakfast included.",
+    facil:["Lakefront","Balcony in every room","900 m2 spa","Gourmet dining","Free minibar","Free WiFi"],
+    transport:"~5 min to boat dock &middot; Bus 6/7 &middot; car ~35 min &middot; parking",
+    book:"https://www.booking.com/hotel/ch/wellness-rossli.html?aid=8132308&checkin=2026-08-27&checkout=2026-08-29&no_rooms=2&group_adults=4&selected_currency=USD",
+    lat:47.031613, lng:8.424878
+  },
+  {
+    name:"See- & Seminarhotel FloraAlpina", area:"Vitznau", stars:3, score:8.9, reviews:1352,
+    perNight:300, total:1202, budget:"under", lakeview:true, balcony:true,
+    img:"https://media.myswitzerland.com/image/fetch/c_lfill,g_auto,w_1600,h_900/f_auto,q_80,fl_keep_iptc/https://media-v2.discover.swiss/rawmedia/hs-st/SUMMER_eb6e99c.jpg",
+    thumbs:["https://media.myswitzerland.com/image/fetch/c_lfill,g_auto,w_1600,h_900/f_auto,q_80,fl_keep_iptc/https://media-v2.discover.swiss/rawmedia/hs-st/SUMMER_eb6e99c.jpg"],
+    desc:"Nostalgic 1942 hotel in parkland just outside Vitznau, with the Rigi rising behind. Lake-view rooms, a big panorama terrace, heated outdoor pool & Jacuzzi.",
+    facil:["Lake-view rooms","Panorama terrace","Outdoor pool","Jacuzzi","Free parking","Free WiFi"],
+    transport:"Free hotel shuttle to Vitznau &middot; boat from Vitznau dock &middot; car ~40 min",
+    book:"https://www.booking.com/hotel/ch/floraalpina.html?aid=8132308&checkin=2026-08-27&checkout=2026-08-29&no_rooms=2&group_adults=4&selected_currency=USD",
+    lat:46.998706, lng:8.478269
+  },
+  {
+    name:"Hotel Terrasse am See", area:"Vitznau", stars:3, score:8.2, reviews:232,
+    perNight:276, total:1106, budget:"under", lakeview:true, balcony:true,
+    img:"https://hotel-terrasse.ch/bilder/hauptbilder/see/_AUTOxAUTO_crop_center-center_none/DSCF0782.jpg",
+    thumbs:[
+      "https://hotel-terrasse.ch/bilder/hauptbilder/see/_AUTOxAUTO_crop_center-center_none/DSCF0782.jpg",
+      "https://hotel-terrasse.ch/bilder/hauptbilder/zimmer/superior-terrassenzugang/_AUTOx1000_crop_center-center_none/zimmer-superior-terrasse-hotel-terrasse-am-see-vitznau-12.jpg"
+    ],
+    desc:"Charming historic house (since 1873) sitting right on the water in Vitznau, at the foot of the Rigi cogwheel railway. Superior rooms open onto a lake terrace.",
+    facil:["On the water","Superior terrace rooms","Lake views","Historic","Free WiFi","Parking"],
+    transport:"By Vitznau boat dock & Rigi railway &middot; car ~40 min &middot; parking",
+    book:"https://www.booking.com/hotel/ch/hobby-vitznau.html?aid=8132308&checkin=2026-08-27&checkout=2026-08-29&no_rooms=2&group_adults=4&selected_currency=USD",
+    lat:47.00976, lng:8.482537
+  },
+  {
+    name:"Art Deco Hotel Montana", area:"Lucerne", stars:4, score:9.0, reviews:442,
+    perNight:605, total:2419, budget:"over", lakeview:true, balcony:false,
+    img:"https://www.hotel-montana.ch/bilder/hauptbilder/hotel-und-Aussicht/_1200xAUTO_crop_center-center_100_none_ns/vision-werte-hotel-montana-luzern-01.jpg",
+    thumbs:["https://www.hotel-montana.ch/bilder/hauptbilder/hotel-und-Aussicht/_1200xAUTO_crop_center-center_100_none_ns/vision-werte-hotel-montana-luzern-01.jpg"],
+    desc:"Landmark 9.0-rated hilltop hotel in Lucerne city, reached by its own funicular. Sweeping lake & mountain views, art-deco style, a beach club and a buzzing terrace.",
+    facil:["In the city","Lake-view rooms","Private funicular","Beach club","Restaurant/bar","Free WiFi"],
+    transport:"In Lucerne &mdash; 8 min walk + funicular from the station &middot; easy trains to Chur",
+    book:"https://www.booking.com/hotel/ch/art-deco-hotel-montana-luzern.html?aid=8132308&checkin=2026-08-27&checkout=2026-08-29&no_rooms=2&group_adults=4&selected_currency=USD",
+    lat:47.056541, lng:8.319588
+  },
+  {
+    name:"HERMITAGE Lake Lucerne", area:"Lucerne", stars:4, score:9.0, reviews:889,
+    perNight:715, total:2859, budget:"over", lakeview:true, balcony:true,
+    img:"https://hermitagelakelifestyle.luzernshotel.com/data/Photos/1080x700w/17057/1705768/1705768897.JPEG",
+    thumbs:[
+      "https://hermitagelakelifestyle.luzernshotel.com/data/Photos/1080x700w/17057/1705768/1705768897.JPEG",
+      "https://hermitagelakelifestyle.luzernshotel.com/data/Photos/450x450w/17563/1756392/1756392306.JPEG",
+      "https://hermitagelakelifestyle.luzernshotel.com/data/Photos/450x450w/17694/1769477/1769477833.JPEG"
+    ],
+    desc:"Lucerne's only hotel with its own private lake frontage &mdash; a design 'beach club & lifestyle' hotel (rooms by Herzog & de Meuron) with terraces straight over the water.",
+    facil:["Private lakefront","Terrace rooms","Beach club","Spa/sauna","2 restaurants","Free WiFi"],
+    transport:"~10 min by bus/car from Lucerne old town &middot; lakefront setting &middot; parking",
+    book:"https://www.booking.com/hotel/ch/seehotel-hermitage.html?aid=8132308&checkin=2026-08-27&checkout=2026-08-29&no_rooms=2&group_adults=4&selected_currency=USD",
+    lat:47.042795, lng:8.350241
+  },
+  {
+    name:"Hotel Baslertor", area:"Lucerne", stars:3, score:8.6, reviews:2138,
+    perNight:487, total:1950, budget:"in", lakeview:false, balcony:true,
+    img:"https://www.baslertor.ch/wp-content/uploads/2024/02/18-Hotel-Baslertor-Luzern-Stadt-und-Umgebung-768x1024.jpg",
+    thumbs:[
+      "https://www.baslertor.ch/wp-content/uploads/2024/02/18-Hotel-Baslertor-Luzern-Stadt-und-Umgebung-768x1024.jpg",
+      "https://www.baslertor.ch/wp-content/uploads/2022/04/02-Hotel-Luzern-Altstadt-1024x665.jpg"
+    ],
+    desc:"Well-rated, central old-town hotel &mdash; a quiet Mediterranean-feel oasis with a summer pool and courtyard, steps from the Kapellbr&uuml;cke. No lake view, but the most walkable base.",
+    facil:["Old-town centre","Summer pool","Courtyard","Terrace rooms","Free WiFi","Walk everywhere"],
+    transport:"Heart of Lucerne &mdash; walk to station, boats & old town &middot; direct trains to Chur",
+    book:"https://www.booking.com/hotel/ch/hotelbaslertor.html?aid=8132308&checkin=2026-08-27&checkout=2026-08-29&no_rooms=2&group_adults=4&selected_currency=USD",
+    lat:47.050964, lng:8.302239
+  },
+  {
+    name:"B&uuml;rgenstock Hotel & Alpine Spa", area:"B&uuml;rgenstock", stars:5, score:9.4, reviews:1145,
+    perNight:1479, total:5915, budget:"over", lakeview:true, balcony:true,
+    img:"https://burgenstockresort.com/uploads/media/1920x1080-cover-page/03/2953-poster-1920.webp",
+    thumbs:[
+      "https://burgenstockresort.com/uploads/media/1920x1080-cover-page/03/2953-poster-1920.webp",
+      "https://burgenstockresort.com/uploads/media/768x768/04/4244-1.webp",
+      "https://burgenstockresort.com/uploads/media/768x768/00/4250-2.webp"
+    ],
+    desc:"The dream / splurge option: a legendary 5-star resort on a cliff 500 m above Lake Lucerne, with the famous infinity-edge pool over the water. Well over budget &mdash; here in case you fall in love.",
+    facil:["Clifftop lake views","Balcony/terrace","Infinity pool","Alpine spa","Many restaurants","Funicular access"],
+    transport:"Boat to Kehrsiten + private funicular, or car ~45 min from Lucerne",
+    book:"https://www.booking.com/hotel/ch/burgenstock-hotels-ag.html?aid=8132308&checkin=2026-08-27&checkout=2026-08-29&no_rooms=2&group_adults=4&selected_currency=USD",
+    lat:46.994945, lng:8.374066
+  }
+];
+
+const state = { area:"all", budget:"all", balcony:false, lakeview:false, favOnly:false, sort:"price" };
+const grid = document.getElementById('grid');
+const countEl = document.getElementById('count');
+
+const FAV_KEY = "europe2026_favs";
+let favorites = new Set();
+try { favorites = new Set(JSON.parse(localStorage.getItem(FAV_KEY) || "[]")); } catch(e){}
+function saveFavs(){ try { localStorage.setItem(FAV_KEY, JSON.stringify([...favorites])); } catch(e){} }
+function isFav(h){ return favorites.has(h.name); }
+const FALLBACK = "data:image/svg+xml;utf8," + encodeURIComponent(
+  "<svg xmlns='http://www.w3.org/2000/svg' width='640' height='400'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='#163050'/><stop offset='1' stop-color='#0e2038'/></linearGradient></defs><rect width='640' height='400' fill='url(#g)'/><text x='50%' y='50%' fill='#7fa6d8' font-family='sans-serif' font-size='22' text-anchor='middle'>Photo on Booking</text></svg>"
+);
+const starStr = n => "★".repeat(n) + "☆".repeat(5-n);
+const budgetMeta = {
+  under:{cls:"b-under",t:"Under budget"},
+  in:{cls:"b-in",t:"In budget"},
+  over:{cls:"b-over",t:"Splurge"}
+};
+
+function cardHTML(h, i){
+  const bm = budgetMeta[h.budget];
+  const badges = [];
+  if(h.lakeview) badges.push("<span class='badge view'>Lake view</span>");
+  if(h.balcony) badges.push("<span class='badge balcony'>Balcony</span>");
+  const thumbs = (h.thumbs && h.thumbs.length>1)
+    ? "<div class='thumbs'>" + h.thumbs.map((t,ti)=>"<button data-card='"+i+"' data-src=\""+t+"\" class='"+(ti===0?'active':'')+"'><img src=\""+t+"\" loading='lazy' onerror=\"this.parentElement.style.display='none'\"></button>").join('') + "</div>"
+    : "";
+  const fav = isFav(h);
+  return "<article class='card"+(fav?" fav":"")+"'>"
+    + "<div class='imgwrap'>"
+    + "<img class='main' id='img-"+i+"' src=\""+h.img+"\" alt=\""+h.name+"\" loading='lazy' onerror=\"this.onerror=null;this.src='"+FALLBACK+"'\">"
+    + "<div class='badges'>"+badges.join('')+"</div>"
+    + "<div class='areaTag'>"+h.area+"</div>"
+    + "<button class='favbtn"+(fav?" on":"")+"' data-fav='"+i+"' title='Save to favorites' aria-label='Save to favorites'>"+(fav?"♥":"♡")+"</button>"
+    + thumbs
+    + "</div>"
+    + "<div class='body'>"
+    + "<div class='titlerow'><div><h3>"+h.name+"</h3><div class='stars'>"+starStr(h.stars)+"</div></div>"
+    + "<div class='ratingbox'><span class='score "+(h.score>=8.6?'':'mid')+"'>"+h.score.toFixed(1)+"</span><span>"+h.reviews.toLocaleString()+"<br>reviews</span></div></div>"
+    + "<div class='desc'>"+h.desc+"</div>"
+    + "<div class='facil'>"+h.facil.map(f=>"<span>"+f+"</span>").join('')+"</div>"
+    + "<div class='transport'><div><b>Transport:</b> "+h.transport+"</div></div>"
+    + "<div class='priceblock'><div class='price'><div class='pn'>$"+h.perNight+"<span class='unit'> /room&middot;night</span></div>"
+    + "<div class='tot'>&asymp; $"+h.total.toLocaleString()+" total &middot; 2 rooms &middot; 2 nights</div></div>"
+    + "<div class='budgetTag "+bm.cls+"'>"+bm.t+"</div></div>"
+    + "<div class='cta'>"
+    + "<a class='btn book' href='"+h.book+"' target='_blank' rel='noopener'>Check availability &amp; photos</a>"
+    + "<a class='btn map' href='https://www.google.com/maps/search/?api=1&query="+h.lat+","+h.lng+"' target='_blank' rel='noopener'>Map</a>"
+    + "</div>"
+    + "</div></article>";
+}
+
+function render(){
+  let list = HOTELS.filter(h=>{
+    if(state.area!=="all" && h.area!==state.area) return false;
+    if(state.budget!=="all" && h.budget!==state.budget) return false;
+    if(state.balcony && !h.balcony) return false;
+    if(state.lakeview && !h.lakeview) return false;
+    if(state.favOnly && !isFav(h)) return false;
+    return true;
+  });
+  const s = state.sort;
+  list.sort((a,b)=>{
+    if(s==="fav"){ const d=(isFav(b)?1:0)-(isFav(a)?1:0); return d!==0?d:a.perNight-b.perNight; }
+    if(s==="price") return a.perNight-b.perNight;
+    if(s==="priceHigh") return b.perNight-a.perNight;
+    if(s==="rating") return b.score-a.score;
+    if(s==="stars") return b.stars-a.stars || b.score-a.score;
+    return 0;
+  });
+  grid.innerHTML = list.length ? list.map((h)=>cardHTML(h, HOTELS.indexOf(h))).join('')
+    : "<div class='empty'>No hotels match these filters &mdash; loosen them a bit.</div>";
+  const favCount = favorites.size;
+  countEl.textContent = list.length + " of " + HOTELS.length + " hotels" + (favCount? " · " + favCount + " ♥ saved" : "");
+  grid.querySelectorAll('.favbtn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const h = HOTELS[+btn.getAttribute('data-fav')];
+      if(favorites.has(h.name)) favorites.delete(h.name); else favorites.add(h.name);
+      saveFavs(); render();
+    });
+  });
+  grid.querySelectorAll('.thumbs button').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const ci = btn.getAttribute('data-card');
+      document.getElementById('img-'+ci).src = btn.getAttribute('data-src');
+      btn.parentElement.querySelectorAll('button').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+}
+
+document.getElementById('areaSeg').addEventListener('click', e=>{
+  const c = e.target.closest('.chip'); if(!c) return;
+  state.area = c.dataset.area;
+  document.querySelectorAll('#areaSeg .chip').forEach(x=>x.classList.toggle('active', x===c));
+  render();
+});
+document.getElementById('budgetSeg').addEventListener('click', e=>{
+  const c = e.target.closest('.chip'); if(!c) return;
+  state.budget = c.dataset.budget;
+  document.querySelectorAll('#budgetSeg .chip').forEach(x=>x.classList.toggle('active', x===c));
+  render();
+});
+document.querySelectorAll('.chip.tgl').forEach(c=>{
+  c.addEventListener('click', ()=>{
+    const k = c.dataset.toggle; state[k] = !state[k];
+    c.classList.toggle('active', state[k]); render();
+  });
+});
+document.getElementById('sort').addEventListener('change', e=>{ state.sort = e.target.value; render(); });
+
+render();
+</script>
+</body>
+</html>
